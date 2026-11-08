@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masdiu Projects - Catálogo Oficial</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Encabezado -->
+    <header class="main-header">
+        <div class="logo-wrapper">
+            <img src="logo.png" alt="Masdiu Projects" class="brand-logo">
+        </div>
+    </header>
+
+    <!-- Catálogo de Proyectos Autónomo -->
+    <main class="catalog-container" id="catalog"></main>
+
+    <!-- Panel de Administración Secreto -->
+    <footer class="admin-footer">
+        <div id="admin-box" class="admin-box hidden">
+            <h3>🎛️ Panel de Creador (Victor)</h3>
+            <p style="color: #00d2ff; font-size: 0.85rem; margin-bottom: 10px;">Modo dueño activado mediante enlace seguro.</p>
+            <input type="text" id="app-title" placeholder="Título de la aplicación">
+            <textarea id="app-desc" placeholder="Descripción de la app"></textarea>
+            <input type="text" id="app-tags" placeholder="Tecnologías (ej: Three.js, MediaPipe, JS)">
+            <input type="text" id="app-web" placeholder="Link de GitHub Pages">
+            <input type="text" id="app-exe" placeholder="Link del archivo .exe">
+            <button id="btn-save-app" class="btn">Publicar en el Catálogo</button>
+        </div>
+        <p class="copyright-text">© 2026 masdiu projects</p>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://gstatic.com";
+        import { getDatabase, ref, set, push, onValue, remove } from "https://gstatic.com";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD1J4hNpbJOa00p1vHwPLe18o9u8EJmU8k",
+            authDomain: "://firebaseapp.com",
+            databaseURL: "https://masdiu-projects-default-rtdb.firebaseio.com",
+            projectId: "masdiu-projects",
+            storageBucket: "://appspot.com",
+            messagingSenderId: "707355847537",
+            appId: "1:707355847537:web:4c312e1a064df4d95324d0",
+            measurementId: "G-ML7GVQ12EE"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const catalogContainer = document.getElementById('catalog');
+        const adminBox = document.getElementById('admin-box');
+
+        // REGLA: Poner aquí la misma clave secreta que pusiste en las reglas de Firebase
+        const CLAVE_SECRETA = 'Utilize AI para este proyectos jejeje';
+
+
+
+        // DETECTAR ENLACE SECRETO (?modo=dueno)
+        const urlParams = new URLSearchParams(window.location.search);
+        const esDueno = urlParams.get('modo') === 'dueno';
+
+        if (esDueno) {
+            const confirmar = confirm("¡Hola Víctor! ¿Quieres activar el modo dueño?");
+            if (confirmar) {
+                adminBox.classList.remove('hidden');
+            }
+        }
+
+        // 1. CARGAR PROYECTOS EN TIEMPO REAL DESDE LA BASE DE DATOS ÚNICA
+        onValue(ref(db, 'apps'), (snapshot) => {
+            catalogContainer.innerHTML = "";
+            const data = snapshot.val();
+            if (data) {
+                Object.keys(data).forEach((key) => {
+                    const appData = data[key];
+                    const tagsHtml = appData.tags ? appData.tags.split(',').map(tag => `<span class="tag">${tag.trim()}</span>`).join('') : '';
+
+                    const card = document.createElement('div');
+                    card.className = "project-card";
+                    card.innerHTML = `
+                        <h2 class="project-title">${appData.title}</h2>
+                        <p class="project-description">${appData.description}</p>
+                        <div class="tech-tags">${tagsHtml}</div>
+                        <div class="card-buttons">
+                            <a href="${appData.webLink || '#'}" class="btn btn-web" target="_blank">Probar en la Web</a>
+                            <a href="${appData.exeLink || '#'}" class="btn btn-exe">Descargar .exe para Windows</a>
+                            <button class="btn-delete" data-id="${key}" style="display:${esDueno ? 'block' : 'none'}; background:#ff4a4a; color:white; border:none; padding:8px; margin-top:10px; border-radius:4px; cursor:pointer; font-weight:bold;">Eliminar Proyecto</button>
+                        </div>
+                    `;
+                    catalogContainer.appendChild(card);
+                });
+            } else {
+                catalogContainer.innerHTML = "<p style='color:#a0aec0; text-align:center; width:100%;'>No hay proyectos en el catálogo actualmente.</p>";
+            }
+        });
+
+        // 2. SUBIR PROYECTO (Enviando la clave de validación)
+        document.getElementById('btn-save-app').addEventListener('click', () => {
+            const title = document.getElementById('app-title').value;
+            const description = document.getElementById('app-desc').value;
+            const tags = document.getElementById('app-tags').value;
+            const webLink = document.getElementById('app-web').value;
+            const exeLink = document.getElementById('app-exe').value;
+
+            if (title && description) {
+                const newAppRef = push(ref(db, 'apps'));
+                
+                // Primero guardamos la clave de validación temporalmente para que Firebase nos deje escribir
+                set(ref(db, 'clave_maestra'), CLAVE_SECRETA).then(() => {
+                    // Si la clave es correcta, subimos los datos de tu juego
+                    set(newAppRef, { title, description, tags, webLink, exeLink })
+                        .then(() => {
+                            alert("¡Proyecto publicado con éxito en la página principal!");
+                            document.getElementById('app-title').value = "";
+                            document.getElementById('app-desc').value = "";
+                            document.getElementById('app-tags').value = "";
+                            document.getElementById('app-web').value = "";
+                            document.getElementById('app-exe').value = "";
+                        })
+                        .catch(() => alert("Error de seguridad: Clave incorrecta."));
+                });
+            } else {
+                alert("Rellena el título y la descripción.");
+            }
+        });
+
+        // Eliminar proyecto
+        catalogContainer.addEventListener('click', (e) => {
+            if(e.target.classList.contains('btn-delete') && esDueno) {
+                const id = e.target.getAttribute('data-id');
+                if(confirm("¿Quieres eliminar este proyecto del catálogo?")) {
+                    set(ref(db, 'clave_maestra'), CLAVE_SECRETA).then(() => {
+                        remove(ref(db, 'apps/' + id));
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

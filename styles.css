@@ -1,0 +1,220 @@
+html, body {
+    background-color: #0b0c10 !important;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: #ffffff;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 40px 20px 120px 20px;
+}
+
+.main-header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.logo-wrapper {
+    width: 100%;
+    max-width: 320px;
+    padding: 10px;
+}
+
+.brand-logo {
+    width: 100% !important;
+    height: auto !important;
+    display: block;
+    object-fit: contain;
+}
+
+.catalog-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    width: 100%;
+    max-width: 900px;
+}
+
+.project-card {
+    background-color: #171923;
+    border: 1px solid #2d3748;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-4px);
+    border-color: #00d2ff;
+}
+
+.project-title {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.project-description {
+    font-size: 0.9rem;
+    color: #a0aec0;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.tag {
+    background-color: rgba(0, 210, 255, 0.1);
+    color: #00d2ff;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.card-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn {
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.9rem;
+    background-color: #00d2ff;
+    color: #0b0c10;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn:hover { background-color: #00b4db; }
+
+.btn-web {
+    background-color: transparent;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+}
+
+.btn-web:hover {
+    background-color: #ffffff;
+    color: #0b0c10;
+}
+
+/* Pie de Página Administrativo */
+.admin-footer {
+    margin-top: 60px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.auth-box {
+    background: #11141d;
+    border: 1px dashed #2d3748;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.auth-title {
+    font-size: 0.85rem;
+    color: #a0aec0;
+    margin-bottom: 10px;
+}
+
+.auth-inputs {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.auth-inputs input {
+    background: #171923;
+    border: 1px solid #2d3748;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    width: 160px;
+}
+
+.btn-small {
+    background: #2d3748;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+.btn-small:hover { background: #00d2ff; color: #0b0c10; }
+
+.admin-box {
+    background: #1a202c;
+    border: 1px solid #00d2ff;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: left;
+}
+
+.admin-box h3 { color: #00d2ff; margin: 0; }
+
+.admin-box input, .admin-box textarea {
+    background: #2d3748;
+    border: 1px solid #4a5568;
+    color: white;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+.admin-box textarea { height: 80px; resize: none; }
+
+.btn-secondary {
+    background: transparent;
+    color: #ff4a4a;
+    border: 1px solid #ff4a4a;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.btn-secondary:hover { background: #ff4a4a; color: white; }
+
+.hidden { display: none !important; }
+.copyright-text {
+    color: #4a5568;
+    font-size: 0.8rem;
+    text-align: center;
+    margin-top: 40px;
+    cursor: default;
+    user-select: none; /* Evita que el texto se sombree al hacer clics */
+    transition: color 0.2s;
+}
+.copyright-text:hover {
+    color: #a0aec0; /* Se aclara ligeramente al pasar el mouse por encima */
+}
+
