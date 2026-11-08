@@ -41,7 +41,7 @@
         const firebaseConfig = {
             apiKey: "AIzaSyD1J4hNpbJOa00p1vHwPLe18o9u8EJmU8k",
             authDomain: "://firebaseapp.com",
-            databaseURL: "https://masdiu-projects-default-rtdb.firebaseio.com",
+            databaseURL: "https://firebaseio.com",
             projectId: "masdiu-projects",
             storageBucket: "://appspot.com",
             messagingSenderId: "707355847537",
@@ -55,10 +55,8 @@
         const catalogContainer = document.getElementById('catalog');
         const adminBox = document.getElementById('admin-box');
 
-        // REGLA: Poner aquí la misma clave secreta que pusiste en las reglas de Firebase
-        const CLAVE_SECRETA = 'Utilize AI para este proyectos jejeje';
-
-
+        // Contraseña integrada perfectamente
+        const CLAVE_SECRETA = 'Utilize AI para este proyectos jejeje'; 
 
         // DETECTAR ENLACE SECRETO (?modo=dueno)
         const urlParams = new URLSearchParams(window.location.search);
@@ -71,7 +69,7 @@
             }
         }
 
-        // 1. CARGAR PROYECTOS EN TIEMPO REAL DESDE LA BASE DE DATOS ÚNICA
+        // 1. CARGAR PROYECTOS EN TIEMPO REAL
         onValue(ref(db, 'apps'), (snapshot) => {
             catalogContainer.innerHTML = "";
             const data = snapshot.val();
@@ -99,7 +97,7 @@
             }
         });
 
-        // 2. SUBIR PROYECTO (Enviando la clave de validación)
+        // 2. SUBIR PROYECTO
         document.getElementById('btn-save-app').addEventListener('click', () => {
             const title = document.getElementById('app-title').value;
             const description = document.getElementById('app-desc').value;
@@ -110,19 +108,17 @@
             if (title && description) {
                 const newAppRef = push(ref(db, 'apps'));
                 
-                // Primero guardamos la clave de validación temporalmente para que Firebase nos deje escribir
                 set(ref(db, 'clave_maestra'), CLAVE_SECRETA).then(() => {
-                    // Si la clave es correcta, subimos los datos de tu juego
                     set(newAppRef, { title, description, tags, webLink, exeLink })
                         .then(() => {
-                            alert("¡Proyecto publicado con éxito en la página principal!");
+                            alert("¡Proyecto publicado con éxito!");
                             document.getElementById('app-title').value = "";
                             document.getElementById('app-desc').value = "";
                             document.getElementById('app-tags').value = "";
                             document.getElementById('app-web').value = "";
                             document.getElementById('app-exe').value = "";
                         })
-                        .catch(() => alert("Error de seguridad: Clave incorrecta."));
+                        .catch(() => alert("Error de seguridad."));
                 });
             } else {
                 alert("Rellena el título y la descripción.");
@@ -133,7 +129,7 @@
         catalogContainer.addEventListener('click', (e) => {
             if(e.target.classList.contains('btn-delete') && esDueno) {
                 const id = e.target.getAttribute('data-id');
-                if(confirm("¿Quieres eliminar este proyecto del catálogo?")) {
+                if(confirm("¿Quieres eliminar este proyecto?")) {
                     set(ref(db, 'clave_maestra'), CLAVE_SECRETA).then(() => {
                         remove(ref(db, 'apps/' + id));
                     });
